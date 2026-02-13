@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ধন্যবাদ — ডাউনলোড</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; background: #f8f9fa; padding: 50px 20px; text-align: center; }
+    .download-btn { background: #28a745; color: white; padding: 20px 50px; font-size: 1.5rem; border-radius: 50px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="display-4">পেমেন্ট সফল হয়েছে! 🎉</h1>
+    <p class="lead">ধন্যবাদ আপনার ক্রয়ের জন্য। আপনার ইবুক রেডি।</p>
+
+    <div id="successSection" style="display:none;">
+      <h2>এখনই ডাউনলোড করুন</h2>
+      <a href="YOUR_EBOOK_PDF_DIRECT_LINK" class="btn download-btn" download>ডাউনলোড করুন (PDF)</a>
+      <p class="mt-4">লিঙ্ক আপনার ইমেইলে পাঠানো হয়েছে। কোনো সমস্যা হলে WhatsApp-এ যোগাযোগ করুন।</p>
+    </div>
+
+    <div id="failSection">
+      <h2>পেমেন্ট সফল হয়নি</h2>
+      <p>টাকা কাটা হলে সাপোর্টে যোগাযোগ করুন।</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    (function(){ emailjs.init('YOUR_EMAILJS_PUBLIC_KEY'); })();
+
+    window.onload = () => {
+      const params = new URLSearchParams(location.search);
+      const status = params.get('status');
+      const email = params.get('value_a') || '';
+      const name = params.get('value_b') || 'গ্রাহক';
+
+      if (status === 'VALID' || status === 'VALIDATED') {
+        document.getElementById('successSection').style.display = 'block';
+        document.getElementById('failSection').style.display = 'none';
+
+        if (email) {
+          // Send to buyer
+          emailjs.send('YOUR_SERVICE_ID', 'buyer_template_id', {
+            to_name: name,
+            to_email: email,
+            download_link: 'YOUR_EBOOK_PDF_DIRECT_LINK'
+          });
+          // Send to admin (notification)
+          emailjs.send('YOUR_SERVICE_ID', 'admin_template_id', {
+            customer_name: name,
+            customer_email: email,
+            customer_phone: params.get('value_c') || '',
+            amount: params.get('currency_amount') || '999'
+          });
+        }
+      } else {
+        document.getElementById('successSection').style.display = 'none';
+        document.getElementById('failSection').style.display = 'block';
+      }
+    };
+  </script>
+</body>
+</html>
