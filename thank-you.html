@@ -18,7 +18,7 @@
 
     <div id="successSection" style="display:none;">
       <h2>এখনই ডাউনলোড করুন</h2>
-      <a href="YOUR_EBOOK_PDF_DIRECT_LINK" class="btn download-btn" download>ডাউনলোড করুন (PDF)</a>
+      <a href="https://github.com/economist-bd/MH-Academy.com" class="btn download-btn" download>ডাউনলোড করুন (PDF)</a>
       <p class="mt-4">লিঙ্ক আপনার ইমেইলে পাঠানো হয়েছে। কোনো সমস্যা হলে WhatsApp-এ যোগাযোগ করুন।</p>
     </div>
 
@@ -30,7 +30,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
-    (function(){ emailjs.init('YOUR_EMAILJS_PUBLIC_KEY'); })();
+    (function(){ emailjs.init('5Dxqskf0buqd2qZ66'); })();
 
     window.onload = () => {
       const params = new URLSearchParams(location.search);
@@ -44,13 +44,13 @@
 
         if (email) {
           // Send to buyer
-          emailjs.send('YOUR_SERVICE_ID', 'buyer_template_id', {
+          emailjs.send('service_ar5c7ui', 'buyer_template_id', {
             to_name: name,
             to_email: email,
-            download_link: 'YOUR_EBOOK_PDF_DIRECT_LINK'
+            download_link: 'https://github.com/economist-bd/MH-Academy.com'
           });
           // Send to admin (notification)
-          emailjs.send('YOUR_SERVICE_ID', 'admin_template_id', {
+          emailjs.send('service_ar5c7ui', 'admin_template_id', {
             customer_name: name,
             customer_email: email,
             customer_phone: params.get('value_c') || '',
