@@ -16,14 +16,14 @@ exports.initiatePayment = functions.https.onRequest((req, res) => {
     const tran_id = 'YT_' + Date.now() + Math.floor(Math.random() * 1000);
 
     const postData = {
-      store_id: 'YOUR_STORE_ID',
-      store_passwd: 'YOUR_STORE_PASSWD',
+      store_id: 'youtu698f610fcabe',
+      store_passwd: 'youtu698f610fcabe@ssl',
       total_amount: '999.00',
       currency: 'BDT',
       tran_id: tran_id,
-      success_url: 'https://yourdomain.web.app/thank-you.html',  // আপনার আসল ডোমেইন
-      fail_url: 'https://yourdomain.web.app/index.html',
-      cancel_url: 'https://yourdomain.web.app/index.html',
+      success_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/thank-you.html',  // আপনার আসল ডোমেইন
+      fail_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/index.html',
+      cancel_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/index.html',
       cus_name: name,
       cus_email: email,
       cus_phone: phone,
