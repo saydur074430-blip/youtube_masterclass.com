@@ -1,61 +1,56 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-  // CORS হ্যান্ডলিং
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
   };
 
-  // প্রি-ফ্লাইট রিকোয়েস্ট চেক
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers };
+    return { statusCode: 200, headers, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method Not Allowed' }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   try {
     const { name, email, phone } = JSON.parse(event.body);
-    const tran_id = 'YT_' + Date.now() + Math.floor(Math.random() * 1000);
+    const tran_id = 'YT_' + Date.now();
 
-    // SSLCommerz ডাটা (আপনার index.js থেকে নেওয়া)
-    const postData = new URLSearchParams({
-      store_id: 'youtu698f610fcabe',
-      store_passwd: 'youtu698f610fcabe@ssl',
-      total_amount: '999.00',
-      currency: 'BDT',
-      tran_id: tran_id,
-      success_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/thank-you.html',
-      fail_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/index.html',
-      cancel_url: 'https://saydur074430-blip.github.io/youtube_masterclass.com/index.html',
-      cus_name: name,
-      cus_email: email,
-      cus_phone: phone,
-      cus_add1: 'Dhaka',
-      cus_city: 'Dhaka',
-      cus_postcode: '1200',
-      cus_country: 'Bangladesh',
-      product_category: 'eBook',
-      shipping_method: 'NO',
-      num_of_item: '1',
-      product_name: 'YouTube Income Guide',
-      product_profile: 'general',
-      value_a: email,
-      value_b: name,
-      value_c: phone
-    });
+    // SSLCommerz Credentials (Sandbox)
+    const params = new URLSearchParams();
+    params.append('store_id', 'youtu698f610fcabe');
+    params.append('store_passwd', 'youtu698f610fcabe@ssl');
+    params.append('total_amount', '999.00');
+    params.append('currency', 'BDT');
+    params.append('tran_id', tran_id);
+    
+    // Redirect URLs - আপনার Netlify ডোমেইন অনুযায়ী এগুলো আপডেট করুন
+    params.append('success_url', 'https://youtube-masterclass.netlify.app/thank-you.html');
+    params.append('fail_url', 'https://youtube-masterclass.netlify.app/index.html');
+    params.append('cancel_url', 'https://youtube-masterclass.netlify.app/index.html');
+    
+    params.append('cus_name', name);
+    params.append('cus_email', email);
+    params.append('cus_phone', phone);
+    params.append('cus_add1', 'Dhaka');
+    params.append('cus_city', 'Dhaka');
+    params.append('cus_country', 'Bangladesh');
+    params.append('product_name', 'YouTube Masterclass eBook');
+    params.append('product_category', 'Digital Product');
+    params.append('product_profile', 'non-physical-goods');
+    
+    // পাসিং ডাটা thank-you পেজের জন্য
+    params.append('value_a', email);
+    params.append('value_b', name);
+    params.append('value_c', phone);
 
-    // SSLCommerz API কল
     const response = await fetch('https://sandbox.sslcommerz.com/gwprocess/v4/api.php', {
       method: 'POST',
-      body: postData,
+      body: params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
@@ -71,15 +66,14 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify(result),
+        body: JSON.stringify({ error: 'SSLCommerz Error', details: result }),
       };
     }
   } catch (error) {
-    console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Internal Server Error' }),
+      body: JSON.stringify({ error: 'Server Error', message: error.message }),
     };
   }
 };
